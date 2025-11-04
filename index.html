@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stray Kids API</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎵 Stray Kids API</h1>
+            <p class="subtitle">Access Stray Kids Album Data</p>
+        </header>
+
+        <main>
+            <section class="api-info">
+                <h2>Available Endpoints</h2>
+                <p>This API provides access to Stray Kids album information including titles, release dates, descriptions, and tracklists.</p>
+            </section>
+
+            <section class="endpoints">
+                <div class="endpoint-card">
+                    <div class="method">GET</div>
+                    <div class="endpoint-details">
+                        <h3>/api/albums</h3>
+                        <p>Retrieve all albums</p>
+                        <a href="/api/albums" target="_blank" class="try-btn">Try it →</a>
+                    </div>
+                </div>
+
+                <div class="endpoint-card">
+                    <div class="method">GET</div>
+                    <div class="endpoint-details">
+                        <h3>/api/albums/:id</h3>
+                        <p>Retrieve a specific album by ID</p>
+                        <a href="/api/albums/1" target="_blank" class="try-btn">Try with ID 1 →</a>
+                    </div>
+                </div>
+            </section>
+
+            <section class="example">
+                <h2>Example Response</h2>
+                <pre><code>{
+  "_id": 1,
+  "title": "I Am NOT",
+  "albumId": "i-am-not",
+  "img_name": "/images/iamNOT2.jpg",
+  "releaseDate": "March 16, 2018",
+  "description": "The debut mini album...",
+  "type": "Mini Album",
+  "tracks": [
+    "District 9",
+    "Mirror",
+    "Awaken",
+    ...
+  ]
+}</code></pre>
+            </section>
+
+            <section class="usage">
+                <h2>Usage</h2>
+                <p>Make GET requests to the endpoints above. All responses are in JSON format.</p>
+                <div class="code-block">
+                    <code>fetch('https://your-server.onrender.com/api/albums')
+  .then(response => response.json())
+  .then(data => console.log(data));</code>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Built for CSCE 242 Project</p>
+        </footer>
+    </div>
+</body>
+</html>
