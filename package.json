@@ -11,7 +11,11 @@
     "type": "git",
     "url": "git+https://github.com/CSE-sgeddis/StrayKids-server.git"
   },
-  "keywords": ["api", "stray kids", "express"],
+  "keywords": [
+    "api",
+    "stray kids",
+    "express"
+  ],
   "author": "Shalin Geddis",
   "license": "ISC",
   "bugs": {
@@ -20,7 +24,8 @@
   "homepage": "https://github.com/CSE-sgeddis/StrayKids-server#readme",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "multer": "^2.0.2"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
