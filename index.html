@@ -7,6 +7,45 @@
         <link rel="stylesheet" href="styles.css">
     </head>
     <body>
-        <h1>hi</h1>
+        <div class="container">
+        <header>
+            <h1>🎵 Stray Kids API</h1>
+            <p class="subtitle">Access Stray Kids Album Data</p>
+        </header>
+
+        <main>
+            <section class="api-info">
+                <h2>Available Endpoints</h2>
+                <p>This API provides access to Stray Kids album information including titles, release dates, descriptions, and tracklists.</p>
+            </section>
+            <section class="endpoints">
+                <div class="endpoint-card">
+                    <div class="method">GET</div>
+                    <div class="endpoint-details">
+                        <h3>/api/albums</h3>
+                        <p>Retrieve all albums</p>
+                        <a href="/api/albums" target="_blank" class="try-btn">Try it →</a>
+                    </div>
+                </div>
+
+                <div class="endpoint-card">
+                    <div class="method">GET</div>
+                    <div class="endpoint-details">
+                        <h3>/api/albums/:id</h3>
+                        <p>Retrieve a specific album by ID</p>
+                        <a href="/api/albums/1" target="_blank" class="try-btn">Try with ID 1 →</a>
+                    </div>
+                </div>
+
+                <div class="endpoint-card">
+                    <div class="method post">POST</div>
+                    <div class="endpoint-details">
+                        <h3>/api/albums</h3>
+                        <p>Add a new album</p>
+                        <p style="font-size: 0.85rem; color: #666;">Required fields: title, releaseDate, description, type, tracks (array)</p>
+                    </div>
+                </div>
+            </section>
+        </main>
     </body>
 </html>

@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
 const app = express();
+const Joi =require("joi");
 app.use(express.static("public"));
 app.use(express.json());
 app.use(cors());
@@ -192,8 +193,15 @@ let albums = [
   }
 ];
 
+const albumSchema = Joi.object({
+  title: Joi.string().min(1).max(100).required(),
+  releaseDate: Joi.string().required(),
+  description: Joi.string().min(10).max(500).required(),
+  type: Joi.string().valid('Mini Album', 'Studio Album', 'Single', 'EP').required(),
+  tracks: Joi.array().items(Joi.string().min(1).max(100)).min(1).required()
+});
+
 app.get("/api/albums/", (req, res)=>{
-    console.log("in get request")
     res.send(albums);
 });
 
