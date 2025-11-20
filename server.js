@@ -193,13 +193,18 @@ let albums = [
   }
 ];
 
-const albumSchema = Joi.object({
-  title: Joi.string().min(1).max(100).required(),
-  releaseDate: Joi.string().required(),
-  description: Joi.string().min(10).max(500).required(),
-  type: Joi.string().valid('Mini Album', 'Studio Album', 'Single', 'EP').required(),
-  tracks: Joi.array().items(Joi.string().min(1).max(100)).min(1).required()
-});
+const validate = (album) => {
+  const albumSchema = Joi.object({
+    title: Joi.string().min(1).max(100).required(),
+    releaseDate: Joi.string().required(),
+    description: Joi.string().min(10).max(500).required(),
+    type: Joi.string().valid('Mini Album', 'Studio Album', 'Single', 'EP').required(),
+    tracks: Joi.array().items(Joi.string().min(1).max(100)).min(1).required()
+  });
+
+  return albumSchema.validate(album);
+}
+
 
 app.get("/api/albums/", (req, res)=>{
     res.send(albums);
@@ -207,7 +212,7 @@ app.get("/api/albums/", (req, res)=>{
 
 // POST new album
 app.post("/api/albums", (req, res) => {
-  const { error } = albumSchema.validate(req.body);
+  const {error} = validate(req.body);
   
   if (error) {
     return res.status(400).json({ 
