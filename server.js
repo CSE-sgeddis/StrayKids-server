@@ -205,6 +205,46 @@ app.get("/api/albums/", (req, res)=>{
     res.send(albums);
 });
 
+// POST new album
+app.post("/api/albums", (req, res) => {
+  const { error } = albumSchema.validate(req.body);
+  
+  if (error) {
+    return res.status(400).json({ 
+      success: false, 
+      message: error.details[0].message 
+    });
+  }
+
+  const newId = albums.length > 0 
+    ? Math.max(...albums.map(a => a._id)) + 1 
+    : 1;
+
+  const albumId = req.body.title
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-');
+
+  const newAlbum = {
+    _id: newId,
+    title: req.body.title,
+    albumId: albumId,
+    img_name: "/images/default-album.jpg",
+    releaseDate: req.body.releaseDate,
+    description: req.body.description,
+    type: req.body.type,
+    tracks: req.body.tracks
+  };
+
+  albums.push(newAlbum);
+
+  res.status(201).json({
+    success: true,
+    message: "Album added successfully",
+    album: newAlbum
+  });
+});
+
 app.listen(3001, () => {
     console.log("Server is up and running");
 });
