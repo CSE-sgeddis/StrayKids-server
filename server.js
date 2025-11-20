@@ -245,6 +245,78 @@ app.post("/api/albums", (req, res) => {
   });
 });
 
+// PUT - Edit an album
+app.put("/api/albums/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  
+  // Find album
+  const albumIndex = albums.findIndex(a => a._id === id);
+  
+  if (albumIndex === -1) {
+    return res.status(404).json({ 
+      success: false, 
+      message: "Album not found" 
+    });
+  }
+
+  // Validate request body
+  const { error } = albumSchema.validate(req.body);
+  
+  if (error) {
+    return res.status(400).json({ 
+      success: false, 
+      message: error.details[0].message 
+    });
+  }
+
+  // Generate albumId from title
+  const albumId = req.body.title
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-');
+
+  // Update album
+  albums[albumIndex] = {
+    ...albums[albumIndex],
+    title: req.body.title,
+    albumId: albumId,
+    releaseDate: req.body.releaseDate,
+    description: req.body.description,
+    type: req.body.type,
+    tracks: req.body.tracks
+  };
+
+  res.status(200).json({
+    success: true,
+    message: "Album updated successfully",
+    album: albums[albumIndex]
+  });
+});
+
+// DELETE - Delete an album
+app.delete("/api/albums/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  
+  // Find album index
+  const albumIndex = albums.findIndex(a => a._id === id);
+  
+  if (albumIndex === -1) {
+    return res.status(404).json({ 
+      success: false, 
+      message: "Album not found" 
+    });
+  }
+
+  // Remove album
+  const deletedAlbum = albums.splice(albumIndex, 1)[0];
+
+  res.status(200).json({
+    success: true,
+    message: "Album deleted successfully",
+    album: deletedAlbum
+  });
+});
+
 app.listen(3001, () => {
     console.log("Server is up and running");
 });
