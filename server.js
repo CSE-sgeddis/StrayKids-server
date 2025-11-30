@@ -205,14 +205,14 @@ const validate = (album) => {
   return albumSchema.validate(album);
 }
 
-
+// GET all albums
 app.get("/api/albums/", (req, res)=>{
     res.send(albums);
 });
 
 // POST new album
 app.post("/api/albums", (req, res) => {
-  const {error} = validate(req.body);
+  const {error} = albumSchema.validate(req.body);
   
   if (error) {
     return res.status(400).json({ 
@@ -252,74 +252,89 @@ app.post("/api/albums", (req, res) => {
 
 // PUT - Edit an album
 app.put("/api/albums/:id", (req, res) => {
-  const id = parseInt(req.params.id);
+  try{
+    const id = parseInt(req.params.id);
   
-  // Find album
-  const albumIndex = albums.findIndex(a => a._id === id);
   
-  if (albumIndex === -1) {
-    return res.status(404).json({ 
-      success: false, 
-      message: "Album not found" 
+    const albumIndex = albums.findIndex(a => a._id === id);
+    
+    if (albumIndex === -1) {
+      return res.status(404).json({ 
+        success: false, 
+        message: "Album not found" 
+      });
+    }
+
+    const { error } = albumSchema.validate(req.body);
+    
+    if (error) {
+      return res.status(400).json({ 
+        success: false, 
+        message: error.details[0].message 
+      });
+    }
+
+    
+    const albumId = req.body.title
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-');
+
+    
+    albums[albumIndex] = {
+      ...albums[albumIndex],
+      title: req.body.title,
+      albumId: albumId,
+      releaseDate: req.body.releaseDate,
+      description: req.body.description,
+      type: req.body.type,
+      tracks: req.body.tracks
+    };
+
+    res.status(200).json({
+      success: true,
+      message: "Album updated successfully",
+      album: albums[albumIndex]
+    });
+  } catch (err) {
+    console.error("PUT Error:", err);
+    res.status(500).json({
+      success: false,
+      message: "Server error: " + err.message
     });
   }
-
-  // Validate request body
-  const { error } = albumSchema.validate(req.body);
-  
-  if (error) {
-    return res.status(400).json({ 
-      success: false, 
-      message: error.details[0].message 
-    });
-  }
-
-  // Generate albumId from title
-  const albumId = req.body.title
-    .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, '')
-    .replace(/\s+/g, '-');
-
-  // Update album
-  albums[albumIndex] = {
-    ...albums[albumIndex],
-    title: req.body.title,
-    albumId: albumId,
-    releaseDate: req.body.releaseDate,
-    description: req.body.description,
-    type: req.body.type,
-    tracks: req.body.tracks
-  };
-
-  res.status(200).json({
-    success: true,
-    message: "Album updated successfully",
-    album: albums[albumIndex]
-  });
 });
 
 // DELETE - Delete an album
 app.delete("/api/albums/:id", (req, res) => {
-  const id = parseInt(req.params.id);
+  try{
+    const id = parseInt(req.params.id);
   
-  // Find album index
-  const albumIndex = albums.findIndex(a => a._id === id);
-  
-  if (albumIndex === -1) {
-    return res.status(404).json({ 
-      success: false, 
-      message: "Album not found" 
+    // Find album index
+    const albumIndex = albums.findIndex(a => a._id === id);
+    
+    if (albumIndex === -1) {
+      return res.status(404).json({ 
+        success: false, 
+        message: "Album not found" 
+      });
+    }
+
+    // Remove album
+    const deletedAlbum = albums.splice(albumIndex, 1)[0];
+
+    res.status(200).json({
+      success: true,
+      message: "Album deleted successfully",
+      album: deletedAlbum
+    });
+  } catch (err) {
+    console.error("DELETE Error:", err);
+    res.status(500).json({
+      success: false,
+      message: "Server error: " + err.message
     });
   }
-
-  // Remove album
-  const deletedAlbum = albums.splice(albumIndex, 1)[0];
-
-  res.status(200).json({
-    success: true,
-    message: "Album deleted successfully",
-    album: deletedAlbum
-  });
 });
 
 app.listen(3001, () => {
