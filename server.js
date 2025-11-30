@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
 const app = express();
-const Joi =require("joi");
+const Joi = require("joi");
 app.use(express.static("public"));
 app.use(express.json());
 app.use(cors());
@@ -18,7 +18,7 @@ const storage = multer.diskStorage({
     },
   });
   
-  const upload = multer({ storage: storage });
+const upload = multer({ storage: storage });
 
 // Albums Data
 let albums = [
@@ -193,26 +193,23 @@ let albums = [
   }
 ];
 
-const validate = (album) => {
-  const albumSchema = Joi.object({
-    title: Joi.string().min(1).max(100).required(),
-    releaseDate: Joi.string().required(),
-    description: Joi.string().min(10).max(500).required(),
-    type: Joi.string().valid('Mini Album', 'Studio Album', 'Single', 'EP').required(),
-    tracks: Joi.array().items(Joi.string().min(1).max(100)).min(1).required()
-  });
-
-  return albumSchema.validate(album);
-}
+// Validation schema
+const albumSchema = Joi.object({
+  title: Joi.string().min(1).max(100).required(),
+  releaseDate: Joi.string().required(),
+  description: Joi.string().min(10).max(500).required(),
+  type: Joi.string().valid('Mini Album', 'Studio Album', 'Single', 'EP').required(),
+  tracks: Joi.array().items(Joi.string().min(1).max(100)).min(1).required()
+});
 
 // GET all albums
-app.get("/api/albums/", (req, res)=>{
+app.get("/api/albums/", (req, res) => {
     res.send(albums);
 });
 
 // POST new album
 app.post("/api/albums", (req, res) => {
-  const {error} = albumSchema.validate(req.body);
+  const { error } = albumSchema.validate(req.body);
   
   if (error) {
     return res.status(400).json({ 
@@ -252,10 +249,9 @@ app.post("/api/albums", (req, res) => {
 
 // PUT - Edit an album
 app.put("/api/albums/:id", (req, res) => {
-  try{
+  try {
     const id = parseInt(req.params.id);
-  
-  
+    
     const albumIndex = albums.findIndex(a => a._id === id);
     
     if (albumIndex === -1) {
@@ -274,13 +270,11 @@ app.put("/api/albums/:id", (req, res) => {
       });
     }
 
-    
     const albumId = req.body.title
       .toLowerCase()
       .replace(/[^a-z0-9\s-]/g, '')
       .replace(/\s+/g, '-');
 
-    
     albums[albumIndex] = {
       ...albums[albumIndex],
       title: req.body.title,
@@ -307,10 +301,9 @@ app.put("/api/albums/:id", (req, res) => {
 
 // DELETE - Delete an album
 app.delete("/api/albums/:id", (req, res) => {
-  try{
+  try {
     const id = parseInt(req.params.id);
-  
-    // Find album index
+    
     const albumIndex = albums.findIndex(a => a._id === id);
     
     if (albumIndex === -1) {
@@ -320,7 +313,6 @@ app.delete("/api/albums/:id", (req, res) => {
       });
     }
 
-    // Remove album
     const deletedAlbum = albums.splice(albumIndex, 1)[0];
 
     res.status(200).json({
@@ -337,6 +329,6 @@ app.delete("/api/albums/:id", (req, res) => {
   }
 });
 
-app.listen(3001, () => {
-    console.log("Server is up and running");
+app.listen(PORT, () => {
+    console.log(`Server is up and running on port ${PORT}`);
 });
