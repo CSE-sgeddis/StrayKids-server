@@ -39,6 +39,12 @@ build/Release
 
 # Dependency directories
 node_modules/
+.env
+.DS_Store
+public/images/*.jpg
+public/images/*.png
+public/images/*.jpeg
+!public/images/default-album.jpg
 jspm_packages/
 
 # Snowpack dependency directory (https://snowpack.dev/)
